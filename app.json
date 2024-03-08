@@ -20,14 +20,22 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      }
+        "backgroundColor": "#ffffff",
+        "package": "com.app.appTarefas",
+        "version": 1
+      },
+      "package": "com.alissonlara.appTarefas"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "plugins": [
       "expo-font"
-    ]
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "9baa7f67-c055-4583-9fce-f07ae43d1618"
+      }
+    }
   }
 }

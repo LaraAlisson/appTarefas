@@ -16,21 +16,12 @@ export default function App() {
   console.disableYellowBox = true;
 
   const [tarefas, setarTarefas] = useState([{
-
-    id: 1,
-    tarefa: 'Teste das Minha tarefa 01, nos dias de hoje pedro era louco pela sua vida que ja não tinha mais controle'
-  },
-  {
-    id: 2,
-    tarefa: 'Minha tarefa 02'
-  },
-  {
-    id: 3,
-    tarefa: 'Minha tarefa 03'
+    
   }
   ]);
 
   const [modal, setModal] = useState(false);
+  const [tarefaAtual, setTarefaAtual] = useState('');
 
 
   let [fontsLoaded] = useFonts({
@@ -52,13 +43,36 @@ export default function App() {
     .catch(console.warn); // Tratar erros, se houver
 
   function deletarTarefa(id) {
-    alert('Deletado com sucesso a tarefa com id: ' + id + ' neste momento');
-
+    
     let newTarefas = tarefas.filter(function (val) {
       return val.id != id;
     })
 
     setarTarefas(newTarefas);
+  }
+
+  function addTarefa() {
+
+    setModal(false);
+
+    if(tarefaAtual == null){
+      //não execulta função por esta com calor
+      return;
+    }
+    else
+    {
+
+      let id = 0;
+      if (tarefas.length > 0) {
+        id = tarefas[tarefas.length - 1].id + 1;
+      }
+
+      let tarefa = { id: id, tarefa: tarefaAtual };
+      setarTarefas([...tarefas, tarefa]);
+    }
+    
+
+
   }
 
   return (
@@ -70,34 +84,8 @@ export default function App() {
           <Text style={styles.textHeader}> Lista de Tarefas</Text>
         </View>
       </ImageBackground>
+
       <ScrollView >
-
-        {
-          tarefas.map(function (val) {
-            return (
-              <KeyboardAvoidingView style={styles.caixa}>
-                <View >
-                  <Text style={styles.fonteTarefa}>{val.tarefa}</Text>
-                </View>
-                <View style={{ width: '130%', alignItems: 'flex-end' }}>
-                  <TouchableOpacity onPress={() => deletarTarefa(val.id)} style={{ marginVertical: -30, width: '30%' }}>
-                    <AntDesign name="minuscircleo" size={25} color="black" />
-                  </TouchableOpacity>
-                </View>
-              </KeyboardAvoidingView>
-            )
-          })
-
-        }
-         <TouchableHighlight
-                style={styles.openButton2}
-                onPress={() => {
-                  setModal(setModal);
-                }}
-              >
-                <Text style={styles.textStyle}>Nova Tarefa</Text>
-              </TouchableHighlight>
-
         <Modal
           transparent={true}
           animationType="fade"
@@ -108,18 +96,48 @@ export default function App() {
         >
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
-              <TextInput autoFocus={true}></TextInput>
+              <TextInput onChangeText={text => setTarefaAtual(text)} autoFocus={true} style={styles.fonteTarefa}></TextInput>
               <TouchableHighlight
+                onPress={() => addTarefa()}
                 style={styles.openButton}
-                onPress={() => {
-                  setModal(!modal);
-                }}
+
               >
                 <Text style={styles.textStyle}>Salvar</Text>
               </TouchableHighlight>
             </View>
           </View>
         </Modal>
+
+        {
+          tarefas.map(function (val) {
+            return (
+              <KeyboardAvoidingView style={styles.caixa}>
+                <View >
+                  <Text style={styles.fonteTarefa}>{val.tarefa}</Text>
+                </View>
+
+                
+                <View style={{ width: '130%', alignItems: 'flex-end' }}>
+                  <TouchableOpacity onPress={() => deletarTarefa(val.id)} style={{ marginVertical: -30, width: '30%' }}>
+                    <AntDesign name="minuscircleo" size={25} color="black" />
+                  </TouchableOpacity>
+                </View>
+              </KeyboardAvoidingView>
+            )
+          })
+
+        }
+        <TouchableHighlight
+          style={styles.openButton2}
+          onPress={() => {
+            setModal(setModal);
+            setTarefaAtual(null);
+          }}
+        >
+          <Text style={styles.textStyle}>Nova Tarefa</Text>
+        </TouchableHighlight>
+
+
 
       </ScrollView>
 
@@ -193,12 +211,12 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     backgroundColor: "white",
-    borderRadius: 20,
-    padding: 35,
+    borderRadius: 10,
+    padding: 25,
     alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
-      width: 0,
+      width: 10,
       height: 2
     },
     shadowOpacity: 0.25,
@@ -208,32 +226,34 @@ const styles = StyleSheet.create({
   },
   openButton: {
     backgroundColor: "#e3e8e8",
-    borderRadius: 20,
-    padding: 10,
-    elevation: 2
+    borderRadius: 5,
+    padding:10,
+    elevation: 0,
+    marginTop:10,
+    
   },
   openButton2: {
     backgroundColor: '#e3e8e8',
-    borderRadius:3,
+    borderRadius: 3,
     padding: 10,
     elevation: 2,
-    marginTop:2,
-    marginLeft:2,
-    marginRight:2,
-    
+    marginTop: 2,
+    marginLeft: 2,
+    marginRight: 2,
+
   },
   textStyle: {
     color: 'rgba(0,0,0,0.7)',
-   // fontWeight: "bold",
+    // fontWeight: "bold",
     textAlign: "center",
     fontFamily: 'Lusitana_700Bold',
-    fontSize:20
-  
+    fontSize: 20
+
   },
   modalText: {
     marginBottom: 15,
     textAlign: "center"
   }
-   
+
 
 });
